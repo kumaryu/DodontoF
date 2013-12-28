@@ -543,15 +543,19 @@ package {
             }
             
             if( this.isOpen ) {
-                closeSecretMenu.visible = true ;  //カードを伏せる：非公開に戻す
-                return;
-            }
-            
-            if( this.isBack ) {
+                closeSecretMenu.visible = true;  //カードを伏せる：非公開に戻す
                 openPrivateMenu.visible = true; //カードを見る：非公開で自分だけ
             }
+            else if( this.isBack ) {
+                closeSecretMenu.visible = false;  //カードを伏せる：非公開に戻す
+                openPrivateMenu.visible = true; //カードを見る：非公開で自分だけ
+                openPublicMenu.visible = true; //カードを全員に公開する
+            }
+			else {
+                closeSecretMenu.visible = true;  //カードを伏せる：非公開に戻す
+                openPublicMenu.visible = true; //カードを全員に公開する
+			}
             
-            openPublicMenu.visible = true; //カードを全員に公開する
         }
         
         override public function getViewRotationDiff():Number {
