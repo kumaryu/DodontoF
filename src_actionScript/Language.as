@@ -389,6 +389,7 @@ package {
             p.closeCard = "カードを伏せる（非公開）";
             p.changeCardOwnerToMe = "カードを自分の管理へ";
             p.writeCardTextToChat = "カードテキストをチャットに引用";
+            p.editCardMessage = "メッセージカードを編集";
             p.deleteCard = "カード削除";
             p.upSideCard = "正位置";
             p.downSideCard = "逆位置";
@@ -425,6 +426,9 @@ package {
             p.addMessageCard = "メッセージカードの追加";
             p.faceSide = "表面";
             p.backSide = "裏面";
+            // EditMessageCardWindow.mxml
+            p.editMessageCardWindow = "メッセージカード編集画面";
+            p.editMessageCard = "メッセージカードの変更";
             // CardPickUpWindow.mxml
             p.cardPickup = "カードピックアップ";
             // DrawCardWindow.mxml

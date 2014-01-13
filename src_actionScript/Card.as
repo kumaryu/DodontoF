@@ -204,6 +204,10 @@ package {
         public function setImageName(s:String):void {
             this.imageName = s;
         }
+		
+		public function getImageName():String {
+			return this.imageName;
+		}
         
         /** 
          * カード裏の画像URL(もしくはHTML文字列）を設定
@@ -211,6 +215,10 @@ package {
         public function setImageNameBack(s:String):void {
             this.imageNameBack = s;
         }
+		
+		public function getImageNameBack():String {
+			return this.imageNameBack;
+		}
         
         /** 
          * カードの所持者表示の更新
@@ -526,6 +534,7 @@ package {
             changeOwnerMenu.visible = false; //"カードの管理者を自分に変える
             printCardTextMenu.visible = false; //カードテキストをチャットに引用
             removeCardMenu.visible = false; //"カード削除
+            editCardMessageMenu.visible = false; //メッセージカードを編集
             
             if( this.isPrintCardText() ) {
                 if( ! isPrintBackSide() ) {
@@ -536,6 +545,10 @@ package {
             if( this.canDelete ) {
                 removeCardMenu.visible = true;
             }
+			
+			if ( this.isText && isOwner() ) {
+				editCardMessageMenu.visible = true;
+			}
             
             if( ! isOwner() ) {
                 changeOwnerMenu.visible = true; //カードの管理者を自分に変える
@@ -764,6 +777,7 @@ package {
         private var changeOwnerMenu:ContextMenuItem;
         private var removeCardMenu:ContextMenuItem;
         private var printCardTextMenu:ContextMenuItem;
+        private var editCardMessageMenu:ContextMenuItem;
         
         override protected function initContextMenu():void {
             var menu:ContextMenu = new ContextMenu();
@@ -776,6 +790,7 @@ package {
             closeSecretMenu = addMenuItem(menu, Language.s.closeCard, closeSecret, false);
             changeOwnerMenu = addMenuItem(menu, Language.s.changeCardOwnerToMe, changeOwner, true);
             printCardTextMenu = addMenuItem(menu, Language.s.writeCardTextToChat, getContextMenuItemFunctionPrintCardText, true);
+            editCardMessageMenu = addMenuItem(menu, Language.s.editCardMessage, editCardMessage, true);
             
             removeCardMenu = addMenuItem(menu, Language.s.deleteCard, getContextMenuItemRemoveCharacter, true);
             
@@ -850,7 +865,12 @@ package {
             
             return cardMessage;
         }
-        
+
+        protected function editCardMessage(event:ContextMenuEvent):void {
+			var window:EditMessageCardWindow = DodontoF.popup(EditMessageCardWindow, true) as EditMessageCardWindow;
+            window.setTargetCard(this);
+        }		
+
         override public function isGotoGraveyard():Boolean {
             return true;
         }

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<torgtaitai:CommonPopupWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+                xmlns:torgtaitai="*" 
+                width="600" height="300"
+                title="{Language.s.editMessageCardWindow}" 
+                showCloseButton="true"
+                close="PopUpManager.removePopUp(this)"
+                >
+  
+  <mx:HBox height="100%" width="100%">
+    
+    <mx:Box height="100%" width="120">
+      <mx:Spacer height="30" width="100%" />
+      <mx:Box id="cardBackPreviewPlace" height="100%" width="100%" />
+    </mx:Box>
+    
+    <mx:Box height="100%" width="120">
+      <mx:Spacer height="30" width="100%" />
+      <mx:Box id="cardPreviewPlace" height="100%" width="100%" />
+    </mx:Box>
+    
+    <mx:Box height="100%" width="100%">
+      <mx:HBox height="30%" width="100%">
+        <mx:Box height="100%" width="70">
+          <mx:Label text="{Language.s.cardBack}" />
+        </mx:Box>
+	    <mx:TextArea id="imageNameBack"
+                     text="{Language.s.toAnonymous}"
+                     height="100%" width="100%"
+                     change="printPreview(imageNameBack.text, previewCardBack)"
+                     />
+      </mx:HBox>
+      
+      <mx:HBox height="70%" width="100%">
+        <mx:Box height="100%" width="70">
+          <mx:Label text="{Language.s.message}" />
+        </mx:Box>
+        <mx:TextArea id="imageName"
+                     text="{Language.s.sampleMessage}"
+                     height="100%" width="100%"
+                     change="printPreview(imageName.text, previewCard)"
+                     />
+      </mx:HBox>
+    </mx:Box>
+  </mx:HBox>
+  
+  <mx:HBox height="30" width="100%" horizontalAlign="center" verticalAlign="middle">
+    <mx:Button id="executeButton" label="{Language.s.editMessageCard}" click="execute()" enabled="true" />
+    <mx:Button label="{Language.s.cancelButton}" click="PopUpManager.removePopUp(this)" />
+  </mx:HBox>
+  
+  <mx:Script>
+    <![CDATA[
+    import mx.containers.TitleWindow;
+    import mx.managers.PopUpManager;
+    import mx.events.FlexEvent;
+    import mx.controls.Alert;
+    import mx.events.CloseEvent;
+    
+    /** 
+     * メッセージカード編集画面
+     */
+    
+    private var previewCard:Card = null;
+    private var previewCardBack:Card = null;
+	private var targetCard:Card = null;
+	
+	public function setTargetCard(card:Card):void {
+		this.targetCard = card;
+	}
+    
+    /**
+     * Windowの初期化処理
+     */
+    override protected function setup():void {
+        previewCard = addPreviewCard( cardPreviewPlace );
+        previewCardBack = addPreviewCard( cardBackPreviewPlace );
+        
+        previewCard.reverseCardLocal(false);
+        previewCard.setOwnerName(Language.s.faceSide);
+        previewCardBack.setOwnerName(Language.s.backSide);
+        
+		if (targetCard != null) {
+			imageName.text = targetCard.getImageName();
+			imageNameBack.text = targetCard.getImageNameBack();
+		}
+        printPreview(imageName.text, previewCard);
+        printPreview(imageNameBack.text, previewCardBack);
+    }
+    
+    /** 
+     * メッセージカードのプレビューを指定した場所に作製して、
+     * 作製したプレビューを返します。
+     * 
+     * @place プレビュー用のメッセージカードを追加する場所
+     * @return 追加したプレビューカード情報
+     */
+    private function addPreviewCard( place:Box ):Card {
+        var cardInfo:Object = Card.getJsonData("", "", 0, 30);
+        var card:Card = new Card( cardInfo );
+        card.analyzeChangedCharacter( cardInfo );
+        card.getView().y += 30;
+        place.addChild( card.getView() );
+        
+        return card
+    }
+    
+    /** 
+     * 以下のデータを下に、プレビューの内容を更新します。
+     * @text カードに表示する文字
+     * @card 更新対象のプレビューカード
+     */
+    private function printPreview(text:String, card:Card):void {
+        if( card.getBack() ) {
+            card.setImageNameBack(text);
+        } else {
+            card.setImageName(text);
+        }
+        
+        card.loadViewImage();
+    }
+    
+    /** 
+     * カード編集処理
+     */
+    public function execute():void {
+        var imageNameText:String     = imageName.text;
+        var imageNameBackText:String = imageNameBack.text;
+        
+		if (targetCard != null) {
+			DodontoF_Main.getInstance().getGuiInputSender().getSender()
+			.editMessageCard(targetCard, imageNameText, imageNameBackText);
+			targetCard.setImageName(imageNameText);
+			targetCard.setImageNameBack(imageNameBackText);
+			targetCard.loadViewImage();
+		}
+        
+        PopUpManager.removePopUp(this);
+    }
+    
+    ]]>
+  </mx:Script>
+  
+</torgtaitai:CommonPopupWindow>

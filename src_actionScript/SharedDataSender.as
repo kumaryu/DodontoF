@@ -599,6 +599,16 @@ package {
             var obj:Object = getParamObject("addCard", data);
             sendCommandData(obj);
         }
+		
+		public function editMessageCard(card:Card, imageName:String, imageNameBack:String):void {
+            var data:Object = {
+                "imgId" : card.getId(),
+                "imageName" : imageName,
+                "imageNameBack" : imageNameBack
+            };
+            var obj:Object = getParamObject("editCard", data);
+            sendCommandData(obj);
+		}
         
         public function addCardZone(ownerId:String,
                                     ownerName:String,

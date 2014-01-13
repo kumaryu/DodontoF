@@ -792,6 +792,7 @@ class DodontoFServer
       ['drawTargetTrushCard', hasReturn],
       ['drawCard', hasReturn],
       ['addCard', hasNoReturn],
+      ['editCard', hasNoReturn],
       ['addCardZone', hasNoReturn],
       ['initCards', hasReturn],
       ['returnCard', hasNoReturn],
@@ -5245,6 +5246,25 @@ class DodontoFServer
     end
     
     logging("addCard end");
+    
+  end
+  
+  def editCard()
+    logging("editCard begin");
+    
+    editCardData = getParamsFromRequestData()
+    logging(editCardData['imgId'], "character.imgId")
+    
+    changeSaveData(@saveFiles['characters']) do |saveData|
+      characters = getCharactersFromSaveData(saveData)
+      characterData = characters.find {|data| data['imgId'] == editCardData['imgId'] }
+      if characterData then
+        characterData['imageName']     = editCardData['imageName']
+        characterData['imageNameBack'] = editCardData['imageNameBack']
+      end
+    end
+    
+    logging("editCard end");
     
   end
   
