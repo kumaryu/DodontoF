@@ -6418,6 +6418,7 @@ def getCgiParams()
   
   input = nil
   if( ENV['REQUEST_METHOD'] == "POST" )
+    $stdin.binmode if( defined?($stdin.binmode) )
     input = $stdin.read(length)
   else
     input = ENV['QUERY_STRING']
